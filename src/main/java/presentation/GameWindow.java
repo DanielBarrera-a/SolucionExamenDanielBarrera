@@ -1,0 +1,103 @@
+package presentation;
+
+import domain.Gamesave;
+import domain.MachinePlayer;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class GameWindow extends JFrame {
+    private final CardLayout cardLayout;
+    private final JPanel mainPanel;
+    private int currentLevel = 1;
+    private domain.GameMode currentMode;
+    private domain.Skin currentSkin;
+    private MachinePlayer currentMachine;
+
+    private domain.TheDOPOHardestGame currentGame;
+
+    public GameWindow() {
+        setTitle("The DOPO Hardest Game");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        MainMenuPanel mainMenu = new MainMenuPanel(this);
+        mainPanel.add(mainMenu, "MainMenu");
+
+        add(mainPanel);
+    }
+
+    public void startGame(domain.GameMode mode, domain.Skin skin, MachinePlayer machine) {
+        this.currentMode = mode;
+        this.currentSkin = skin;
+        this.currentMachine = machine;
+        this.currentLevel = 1;
+        loadLevel();
+    }
+
+    private void loadLevel() {
+        try {
+            String levelFile = "level" + currentLevel + ".txt";
+            currentGame = domain.ConfigLoader.loadConfig(levelFile, currentMode, currentSkin);
+            if (currentMachine != null) {
+                currentGame.setMachine(currentMachine);
+            }
+            GamePanel gamePanel = new GamePanel(this, currentGame);
+            mainPanel.add(gamePanel, "Game");
+            cardLayout.show(mainPanel, "Game");
+            gamePanel.requestFocusInWindow();
+        } catch (domain.GameException e) {
+            JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado todos los niveles.", "Juego Terminado", JOptionPane.INFORMATION_MESSAGE);
+            showMainMenu();
+        }
+    }
+
+    public void levelCompleted() {
+        currentLevel++;
+        loadLevel();
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void showMainMenu() {
+        cardLayout.show(mainPanel, "MainMenu");
+    }
+
+    public boolean saveGame() {
+        try {
+            Gamesave save = new Gamesave(currentGame, currentLevel, currentMode, currentSkin);
+            boolean saved = domain.SaveManager.saveGame(save);
+            if (saved) {
+                JOptionPane.showMessageDialog(this, "¡Partida guardada correctamente!", "Guardar", JOptionPane.INFORMATION_MESSAGE);
+            }
+            return saved;
+        } catch (domain.GameException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error al guardar", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public void loadSavedGame() {
+        try {
+            Gamesave save = domain.SaveManager.loadGame();
+            if (save == null) return;
+            this.currentLevel = save.currentLevel();
+            this.currentMode  = save.mode();
+            this.currentSkin  = save.skin();
+            this.currentGame  = save.game();
+            GamePanel gamePanel = new GamePanel(this, currentGame);
+            mainPanel.add(gamePanel, "Game");
+            cardLayout.show(mainPanel, "Game");
+            gamePanel.requestFocusInWindow();
+        } catch (domain.GameException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error al cargar", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
