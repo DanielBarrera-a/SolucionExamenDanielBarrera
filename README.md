@@ -90,6 +90,14 @@ NOTA:Soy concinete que de aqui en adelante estoy violando la O de Solid pero esq
 
 ## Comandos para correr el juego
 
+despues de clonar el repo
+
+Se debe teber Maven configurado en su consola
+
+mv compile
+
+mvn compile exec:java -Dexec.mainClass="presentation.TheDOPOHardestGameGUI"
+
 
 
 
