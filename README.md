@@ -15,13 +15,18 @@ En este caso player se enta encargando de mirar si es el cuadrado azul y como sa
 
 Segun lo aprendido en clase las clases no deberian saber como funciona cada skin pro como vemos estamos cometiendo ese error y para rematar ahora miremos la clase de GamePanel que se esta encargando de hacer tres if para saber de que tipo es el cuadrado, adicionalmente GamePanel se esta dedicando tambien a dibujar los cuadrados preguntando su tipo con condicionales:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/eb82e78c006961e3bdc380630b630779560d96c7/ErroEnGamePanel.png)
 
 ¿Como se viola O?
 
 Se esta violando el principio Solid O porque si ejemplo en el "futuro" se quisiera extender mas el proyecto y agregar una nueva skin con velocidad 3 se tendria que ir a la clase Player y en el metodo getSpeed agregar un nuevo if que podria ser ( if (active == Skin.YELLOW) return 3; ) y ahi estamos violando lo que dice el principio solid de que debemos estar abiertos para extender pero cerrados para modificar y agregar un if dentro de una clse es modificar y para terminar de agregar ese nuevo cuadrado de velocidad 3 nos tocaria modificar los metodos de applyEnemyhit y resetShield y tambien toca modificar GamePanel
 
+-¿Como se soluciono?
 
-![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/eb82e78c006961e3bdc380630b630779560d96c7/ErroEnGamePanel.png)
+En la ultima clase de tema el profe nos hablo de los patrones de diseño y para solucionar este problema decidi aplicar Polimorfismo que es un tipo de los dos patrones de reutilizacion:
+
+![image.alt]()
+
+
 
 ## 2.Nueva Moneda
