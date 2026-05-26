@@ -37,7 +37,7 @@ Foto de la presentacion de moodle:
 
 ![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/30709b10b48213a51f426e98d31723ca659709ee/antesc.png)
 
-Para la solcuion decidi implementar dos cosas, 1.Una interfaz () y 2.Una clase abstracta que son las encargada de describir el comportamiento de los diferetes cuadrados y se separo de la clase player
+Para la solcuion decidi implementar dos cosas, 1.Una interfaz (SkinBehavior) y 2.Una clase abstracta (AbstractSkinBehavior) que son las encargada de describir el comportamiento de los diferetes cuadrados y se separo de la clase player
 
 Nueva interfaz SkinBehavior:
 
@@ -51,9 +51,34 @@ Se hace de esta manera para que las skins tengan que usar de las interfaz todos 
 
 Luego se crearon las clases para cada tipo de Skin (RedSkinBehavior, BlueSkinBehavior y GreenSkinBehavior)  y de paso estamos dejando el codigo listo para extenderlo con otra nueva skin solo creariamos nueva SkinBehavior
 
+Se crea la clase SkinBehaviorFactory, ya teniamos otras factorys en el codigo y esta se implemento por la misma razon de no darle la responsabilidad de crear los objetos y no romper el principio O
+
+Adicionalmente se modifico toda la clase player para que se use las clases behavior que a su vez heredan e implementan de la interfaz y la clase abstracta y solo se modifico el metodo de drawPlayer GamePanel para quitar loq ue haciua con ifs y implementar SkinBehavior 
 
 
+¿Como quedaron las pruebas despues del refactor?
 
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/PruebasDespues.png)
 
+Como podemos ver todos los test pasaron despues del refactor
 
 ## 2.Nueva Moneda
+
+Para extender la moneda de buena manera, cabe recalcar que en el parcial la embarre porque rompi la O de Solid y me puse a modificar las clases, lo cual no debi hacer, ahora siguiendo la misma logica del punto 1 de usar las clases de comportamiento (Behavior) extendi esta nueva moneda
+
+Pasos que se llevaron para adicionar la nueva moneda:
+
+1. Agregar un nuevo Enum a los que ya teniamos:
+
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/enum.png)
+
+2. Se creo el ImmunutySkinBehavior:
+
+Como lo dijimos arriba del documento si llegaba el momento de extender la clase abstracta y la interfaz nos hiban a ser de mucha ayuda a la horra de extender por que aqui la estamos usando:
+
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/ae97d7479f8584709b7424890568eefad33a2ea9/inmunity.png)
+
+3.Se modifico SkinBehaviorFactory ya que manejamos casos porque hora de leer el juego ocurre que en el momento exacto en que el jugador pise una la moneda, para saber que reglas de velocidad y color debe aplicarle al jugador ahora que es inmune:
+
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/modificacion.png)
+   
