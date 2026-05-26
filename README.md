@@ -78,7 +78,19 @@ Como lo dijimos arriba del documento si llegaba el momento de extender la clase 
 
 ![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/ae97d7479f8584709b7424890568eefad33a2ea9/inmunity.png)
 
+NOTA:Soy concinete que de aqui en adelante estoy violando la O de Solid pero esque agregar nuevas monedas requiere tambien de un refactor y ya no me da el tiempo
+
 3.Se modifico SkinBehaviorFactory ya que manejamos casos porque hora de leer el juego ocurre que en el momento exacto en que el jugador pise una la moneda, para saber que reglas de velocidad y color debe aplicarle al jugador ahora que es inmune:
 
 ![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/modificacion.png)
-   
+
+4. Se creo la clase PulseCoin con su logica y se modifico el coinFactory para agregar el nuevo caso, adicionalmente se modificaron los metodos tickTime, moveEnemies y checkCollisions
+
+5. 
+
+## Comandos para correr el juego
+
+
+
+
+
