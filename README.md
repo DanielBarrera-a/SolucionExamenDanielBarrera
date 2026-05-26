@@ -92,12 +92,24 @@ NOTA:Soy concinete que de aqui en adelante estoy violando la O de Solid pero esq
 
 despues de clonar el repo
 
-Se debe teber Maven configurado en su consola
+nota: Se debe teber Maven configurado en su consola
 
-mv compile
+cd SolucionExamenDanielBarrera
 
 mvn compile exec:java -Dexec.mainClass="presentation.TheDOPOHardestGameGUI"
 
+Siguinete:
+
+javac -d target/classes -sourcepath src/main/java src/main/java/presentation/TheDOPOHardestGameGUI.java
+
+java -cp target/classes presentation.TheDOPOHardestGameGUI
+
+o si se usa mac 
+
+
+javac -d target/classes -sourcepath src/main/java src/main/java/presentation/TheDOPOHardestGameGUI.java
+
+java -cp target/classes presentation.TheDOPOHardestGameGUI
 
 
 
