@@ -58,7 +58,9 @@ Adicionalmente se modifico toda la clase player para que se use las clases behav
 
 ¿Como quedaron las pruebas despues del refactor?
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/PruebasDespues.png)
+
+Como podemos ver todos los test pasaron despues del refactor
 
 ## 2.Nueva Moneda
 
@@ -68,15 +70,15 @@ Pasos que se llevaron para adicionar la nueva moneda:
 
 1. Agregar un nuevo Enum a los que ya teniamos:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/enum.png)
 
 2. Se creo el ImmunutySkinBehavior:
 
 Como lo dijimos arriba del documento si llegaba el momento de extender la clase abstracta y la interfaz nos hiban a ser de mucha ayuda a la horra de extender por que aqui la estamos usando:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/ae97d7479f8584709b7424890568eefad33a2ea9/inmunity.png)
 
 3.Se modifico SkinBehaviorFactory ya que manejamos casos porque hora de leer el juego ocurre que en el momento exacto en que el jugador pise una la moneda, para saber que reglas de velocidad y color debe aplicarle al jugador ahora que es inmune:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/c6a9537fb3e3d1b7008c34d254d46931e2c5a7e9/modificacion.png)
    
