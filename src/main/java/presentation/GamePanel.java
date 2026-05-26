@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import domain.SkinBehavior;
 
 /**
  * Panel principal del juego.
@@ -192,31 +193,16 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void drawPlayer(Graphics g, Player p, int offsetX, int offsetY) {
-        int size = 30;
-        int padding = 5;
-
-        Skin activeSkin = p.getActiveSkin();
-
-        if (activeSkin == Skin.RED) {
-            g.setColor(Color.RED);
-        } else if (activeSkin == Skin.BLUE) {
-            g.setColor(Color.BLUE);
-            size = 38;
-            padding = 1;
-        } else if (activeSkin == Skin.GREEN) {
-            g.setColor(Color.GREEN);
-            if (p.isSlowedDown()) g.setColor(new Color(0, 120, 0));
-        } else {
-            g.setColor(Color.BLACK);
-        }
-
+        SkinBehavior behavior = p.getActiveBehavior();
+        g.setColor(behavior.getColor(p));
+        int size = behavior.getDrawSize();
+        int padding = behavior.getDrawPadding();
         g.fillRect(
                 offsetX + p.getPosition().getCol() * CELL_SIZE + padding,
                 offsetY + p.getPosition().getRow() * CELL_SIZE + padding,
                 size, size
         );
-
-        if (activeSkin == Skin.GREEN && p.isShielded()) {
+        if (p.isShielded()) {
             g.setColor(Color.WHITE);
             g.drawRect(
                     offsetX + p.getPosition().getCol() * CELL_SIZE + padding,

@@ -10,12 +10,11 @@ public class Player extends Entity {
     private int deaths;
     private Position respawnPosition;
     private Skin skin;
-    private Skin originalSkin;       // skin original del jugador
-    private Skin temporarySkin;      // skin temporal por moneda skin (null = sin efecto)
+    private Skin originalSkin;
+    private Skin temporarySkin;
 
-    // Estos son los atributos que va a usar el verde
-    private boolean shield;
-    private boolean slowedDown;
+    private SkinBehavior skinBehavior;
+    private SkinBehavior temporaryBehavior;
 
     public Player(Position position, Skin skin) {
         super(new Position(position.getRow(), position.getCol()));
@@ -24,29 +23,28 @@ public class Player extends Entity {
         this.temporarySkin = null;
         this.deaths = 0;
         this.respawnPosition = new Position(position.getRow(), position.getCol());
-        this.shield = (skin == Skin.GREEN);
-        this.slowedDown = false;
+        this.skinBehavior = SkinBehaviorFactory.create(skin);
+        this.temporaryBehavior = null;
+    }
+
+    public SkinBehavior getActiveBehavior() {
+        return (temporaryBehavior != null) ? temporaryBehavior : skinBehavior;
     }
 
     public int getSpeed() {
-        Skin active = (temporarySkin != null) ? temporarySkin : skin;
-        if (active == Skin.BLUE) return 2;
-        if (active == Skin.GREEN && slowedDown) return 1;
-        return 1;
+        return getActiveBehavior().getSpeed(this);
     }
 
     /** Aplica una skin temporal por moneda skin. */
     public void applySkin(Skin newSkin) {
         this.temporarySkin = newSkin;
-        this.shield = (newSkin == Skin.GREEN);
-        this.slowedDown = false;
+        this.temporaryBehavior = SkinBehaviorFactory.create(newSkin);
     }
 
     /** Recupera la skin original (al morir o al recoger otra moneda). */
     public void resetSkin() {
         this.temporarySkin = null;
-        this.shield = (originalSkin == Skin.GREEN);
-        this.slowedDown = false;
+        this.temporaryBehavior = null;
     }
 
     /** Devuelve la skin activa (temporal si hay, si no la original). */
@@ -55,29 +53,28 @@ public class Player extends Entity {
     }
 
     public boolean applyEnemyHit() {
-        if (getActiveSkin() == Skin.GREEN && shield) {
-            shield = false;
-            slowedDown = true;
-            return false;
+        boolean died = getActiveBehavior().onEnemyHit(this);
+        if (died) {
+            resetSkin();
         }
-        addDeath();
-        resetSkin(); // recupera skin original al morir
-        return true;
+        return died;
     }
 
     public void resetShield() {
-        if (skin == Skin.GREEN) {
-            shield = true;
-            slowedDown = false;
-        }
+        getActiveBehavior().resetAfterRespawn(this);
     }
 
     public boolean isShielded() {
-        return shield;
+        SkinBehavior active = getActiveBehavior();
+        return active.hasShield();
     }
 
     public boolean isSlowedDown() {
-        return slowedDown;
+        SkinBehavior active = getActiveBehavior();
+        if (active instanceof GreenSkinBehavior) {
+            return ((GreenSkinBehavior) active).isSlowedDown();
+        }
+        return false;
     }
 
     public int getDeaths() {
