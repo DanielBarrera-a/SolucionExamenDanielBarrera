@@ -275,4 +275,118 @@ class GameTests {
         patrol.move(game);
         assertNotEquals(before, patrol.getPosition());
     }
+
+    // ── Pruebas Moneda Pulso ──
+
+    @Test
+    void shouldCreatePulseCoinFromFactory() throws GameException {
+        Coin coin = CoinFactory.create("PULSE", new Position(1, 1));
+        assertInstanceOf(PulseCoin.class, coin);
+    }
+
+    @Test
+    void shouldActivatePulseWhenPulseCoinIsCollected() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1); // recoge la moneda
+        assertTrue(game.isPulseActive());
+        assertTrue(game.getCoins().isEmpty());
+    }
+
+    @Test
+    void shouldFreezeEnemiesWhilePulseIsActive() throws GameException {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(EnemyFactory.create("BASIC_BLUE", new Position(2, 2), true,
+                new String[]{"ENEMY", "BASIC_BLUE", "2", "2", "HORIZONTAL"}));
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(enemies, coins);
+        game.movePlayer(0, 1); // recoge pulso
+        Position enemyPosBefore = new Position(
+                enemies.get(0).getPosition().getRow(),
+                enemies.get(0).getPosition().getCol());
+        game.moveEnemies(); // no debe moverse
+        assertEquals(enemyPosBefore, enemies.get(0).getPosition());
+    }
+
+    @Test
+    void shouldFreezeGameTimeWhilePulseIsActive() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1); // recoge pulso
+        int timeBefore = game.getTimeRemaining();
+        game.tickTime();
+        assertEquals(timeBefore, game.getTimeRemaining()); // no cambió
+    }
+
+    @Test
+    void shouldNotKillPlayerWhenTouchingEnemyDuringPulse() throws GameException {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(EnemyFactory.create("BASIC_BLUE", new Position(1, 3), true,
+                new String[]{"ENEMY", "BASIC_BLUE", "1", "3", "HORIZONTAL"}));
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(enemies, coins);
+        game.movePlayer(0, 1); // recoge pulso en (1,2)
+        game.movePlayer(0, 1); // va a (1,3) donde está el enemigo
+        assertEquals(0, game.getPlayer().getDeaths()); // no murió
+    }
+
+    @Test
+    void shouldResetPulseTimerWhenSecondPulseCoinCollected() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        coins.add(new PulseCoin(new Position(1, 3)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1); // recoge primer pulso
+        game.updatePulse(2.0); // pasan 2 segundos, queda 1s
+        game.movePlayer(0, 1); // recoge segundo pulso
+        assertEquals(3.0, game.getPulseTimeRemaining(), 0.01); // se reinició a 3s
+    }
+
+    @Test
+    void shouldDeactivatePulseAfterTimeExpires() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1); // recoge pulso
+        assertTrue(game.isPulseActive());
+        game.updatePulse(3.5); // pasan 3.5 segundos
+        assertFalse(game.isPulseActive()); // ya se desactivó
+    }
+
+    @Test
+    void shouldChangeSkinToImmunityOnPulseCollection() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1);
+        assertEquals(Skin.IMMUNITY, game.getPlayer().getActiveSkin());
+    }
+
+    @Test
+    void shouldRestoreSkinAfterPulseExpires() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(1, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        game.movePlayer(0, 1);
+        assertEquals(Skin.IMMUNITY, game.getPlayer().getActiveSkin());
+        game.updatePulse(3.5);
+        assertEquals(Skin.RED, game.getPlayer().getActiveSkin()); // volvió a RED
+    }
+
+    @Test
+    void shouldRequirePulseCoinForVictory() {
+        List<Coin> coins = new ArrayList<>();
+        coins.add(new PulseCoin(new Position(2, 2)));
+        TheDOPOHardestGame game = makeGame(new ArrayList<>(), coins);
+        // Ir a SAFE_END sin recoger la moneda
+        game.movePlayer(1, 0);
+        game.movePlayer(1, 0);
+        game.movePlayer(0, 1);
+        game.movePlayer(0, 1); // (3,3) = SAFE_END
+        assertFalse(game.isVictory()); // no ganó porque falta la moneda
+    }
 }

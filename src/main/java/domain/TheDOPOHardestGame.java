@@ -23,6 +23,8 @@ public class TheDOPOHardestGame implements Serializable {
     private boolean isGameOver;
     private boolean isVictory;
     private GameMode mode;
+    private boolean pulseActive = false;
+    private double pulseTimeRemaining = 0.0;
 
     public TheDOPOHardestGame(CellType[][] board, Position startPos, List<Enemy> enemies, List<Coin> coins,
                               int timeLimit, GameMode mode, Skin skin) {
@@ -78,6 +80,7 @@ public class TheDOPOHardestGame implements Serializable {
 
     public void tickTime() {
         if (isGameOver || isVictory) return;
+        if (pulseActive) return; // el tiempo del juego se congela durante el pulso
         timeRemaining--;
         if (timeRemaining <= 0) {
             isGameOver = true;
@@ -86,6 +89,7 @@ public class TheDOPOHardestGame implements Serializable {
 
     public void moveEnemies() {
         if (isGameOver || isVictory) return;
+        if (pulseActive) return; // enemigos congelados durante el pulso
         for (Enemy enemy : enemies) {
             enemy.move(this);
         }
@@ -104,7 +108,8 @@ public class TheDOPOHardestGame implements Serializable {
 
         if (player2 != null
                 && nextRow == player2.getPosition().getRow()
-                && nextCol == player2.getPosition().getCol()) {
+                && nextCol == player2.getPosition().getCol()
+                && !pulseActive) { // <--- AGREGAR && !pulseActive
             return;
         }
 
@@ -122,7 +127,8 @@ public class TheDOPOHardestGame implements Serializable {
         int nextCol = player2.getPosition().getCol() + dCol;
 
         if (nextRow == player.getPosition().getRow()
-                && nextCol == player.getPosition().getCol()) {
+                && nextCol == player.getPosition().getCol()
+                && !pulseActive) { // <--- AGREGAR && !pulseActive
             return;
         }
 
@@ -171,22 +177,24 @@ public class TheDOPOHardestGame implements Serializable {
         }
         specialElements.removeIf(se -> !se.isActive());
 
-        // Colisiones jugadores con enemigos
-        for (Enemy enemy : enemies) {
-            if (enemy.getPosition().equals(player.getPosition())) {
-                boolean died = player.applyEnemyHit();
-                if (died) {
-                    player.getPosition().setRow(player.getRespawnPosition().getRow());
-                    player.getPosition().setCol(player.getRespawnPosition().getCol());
-                    player.resetShield();
+        // Colisiones jugadores con enemigos (no aplica si el pulso está activo)
+        if (!pulseActive) {
+            for (Enemy enemy : enemies) {
+                if (enemy.getPosition().equals(player.getPosition())) {
+                    boolean died = player.applyEnemyHit();
+                    if (died) {
+                        player.getPosition().setRow(player.getRespawnPosition().getRow());
+                        player.getPosition().setCol(player.getRespawnPosition().getCol());
+                        player.resetShield();
+                    }
                 }
-            }
-            if (player2 != null && enemy.getPosition().equals(player2.getPosition())) {
-                boolean died = player2.applyEnemyHit();
-                if (died) {
-                    player2.getPosition().setRow(player2.getRespawnPosition().getRow());
-                    player2.getPosition().setCol(player2.getRespawnPosition().getCol());
-                    player2.resetShield();
+                if (player2 != null && enemy.getPosition().equals(player2.getPosition())) {
+                    boolean died = player2.applyEnemyHit();
+                    if (died) {
+                        player2.getPosition().setRow(player2.getRespawnPosition().getRow());
+                        player2.getPosition().setCol(player2.getRespawnPosition().getCol());
+                        player2.resetShield();
+                    }
                 }
             }
         }
@@ -211,6 +219,37 @@ public class TheDOPOHardestGame implements Serializable {
             } else if (currentCell2 == CellType.SAFE_START) {
                 if (coins.isEmpty()) isVictory = true;
             }
+        }
+    }
+
+    public void activatePulse() {
+        this.pulseActive = true;
+        this.pulseTimeRemaining = 3.0;
+    }
+
+    public void deactivatePulse() {
+        this.pulseActive = false;
+        this.pulseTimeRemaining = 0.0;
+        // Restaurar skin de todos los jugadores
+        player.resetSkin();
+        if (player2 != null) {
+            player2.resetSkin();
+        }
+    }
+
+    public boolean isPulseActive() {
+        return pulseActive;
+    }
+
+    public double getPulseTimeRemaining() {
+        return pulseTimeRemaining;
+    }
+
+    public void updatePulse(double deltaSeconds) {
+        if (!pulseActive) return;
+        pulseTimeRemaining -= deltaSeconds;
+        if (pulseTimeRemaining <= 0) {
+            deactivatePulse();
         }
     }
 

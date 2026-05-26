@@ -108,6 +108,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        game.updatePulse(0.5); // el timer dispara cada 500ms = 0.5s
         game.tickTime();
         game.moveEnemies();
         repaint();
@@ -187,6 +188,13 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         g.drawString("Monedas: " + game.getCoins().size(), 280, 30);
+
+        if (game.isPulseActive()) {
+            g.setColor(new Color(0, 180, 255)); // color cyan
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.drawString("⚡ PULSO: " + String.format(java.util.Locale.US, "%.1f", game.getPulseTimeRemaining()) + "s", 400, 30);
+        }
+
         g.setFont(new Font("Arial", Font.PLAIN, 11));
         g.setColor(Color.GRAY);
         g.drawString("[G] Guardar   [ESC] Pausa", 20, getHeight() - 10);
