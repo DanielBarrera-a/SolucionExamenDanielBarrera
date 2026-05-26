@@ -31,19 +31,21 @@ Foto de la presentacion de moodle:
 
 ¿Como se encuentran los test antes del refactor?
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/30709b10b48213a51f426e98d31723ca659709ee/antesp1.png)
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/30709b10b48213a51f426e98d31723ca659709ee/antesp2.png)
+
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/30709b10b48213a51f426e98d31723ca659709ee/antesc.png)
 
 Para la solcuion decidi implementar dos cosas, 1.Una interfaz () y 2.Una clase abstracta que son las encargada de describir el comportamiento de los diferetes cuadrados y se separo de la clase player
 
 Nueva interfaz SkinBehavior:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/30709b10b48213a51f426e98d31723ca659709ee/nuevaInterfaz.png)
 
 Nueva clase abstracta AbstractSkinBehavior:
 
-![image.alt]()
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/68376d4df97cdd5541fecf08a672b17eba2ced13/abstracantes.png)
 
 Se hace de esta manera para que las skins tengan que usar de las interfaz todos los metodos del juego y con la clase abstracta cada quien reescribe los metodos segun su compartamiento
 
