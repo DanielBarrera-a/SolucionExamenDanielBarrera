@@ -9,6 +9,7 @@ public class SkinBehaviorFactory {
             case BLUE:  return new BlueSkinBehavior();
             case GREEN: return new GreenSkinBehavior();
             default:    return new RedSkinBehavior();
+            case IMMUNITY: return new ImmunitySkinBehavior();
         }
     }
 }

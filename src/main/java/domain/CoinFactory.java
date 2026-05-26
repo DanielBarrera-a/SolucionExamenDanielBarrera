@@ -27,6 +27,8 @@ public class CoinFactory {
                 return new SkinCoin(position, Skin.BLUE);
             case "GREEN_SKIN":
                 return new SkinCoin(position, Skin.GREEN);
+            case "PULSE":
+                return new PulseCoin(position);
             default:
                 throw new GameException("Tipo de moneda desconocido: " + type);
         }

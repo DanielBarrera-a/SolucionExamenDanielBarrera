@@ -1,5 +1,5 @@
 package domain;
 
 public enum Skin {
-    RED, BLUE, GREEN
+    RED, BLUE, GREEN, IMMUNITY
 }
