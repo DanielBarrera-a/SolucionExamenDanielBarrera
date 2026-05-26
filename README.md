@@ -23,9 +23,34 @@ Se esta violando el principio Solid O porque si ejemplo en el "futuro" se quisie
 
 -¿Como se soluciono?
 
-En la ultima clase de tema el profe nos hablo de los patrones de diseño y para solucionar este problema decidi aplicar Polimorfismo que es un tipo de los dos patrones de reutilizacion:
+En la ultima clase de tema el profe nos hablo de los patrones de diseño y para solucionar este problema decidi aplicar el patron Plantilla y polimorfismo que son los dos patrones de reutilizacion:
+
+Foto de la presentacion de moodle:
+
+![image.alt](https://github.com/DanielBarrera-a/SolucionExamenDanielBarrera/blob/10f0aa1142a10d706d29ace224c5294bf2bfd858/patron.png)
+
+¿Como se encuentran los test antes del refactor?
 
 ![image.alt]()
+
+![image.alt]()
+
+Para la solcuion decidi implementar dos cosas, 1.Una interfaz () y 2.Una clase abstracta que son las encargada de describir el comportamiento de los diferetes cuadrados y se separo de la clase player
+
+Nueva interfaz SkinBehavior:
+
+![image.alt]()
+
+Nueva clase abstracta AbstractSkinBehavior:
+
+![image.alt]()
+
+Se hace de esta manera para que las skins tengan que usar de las interfaz todos los metodos del juego y con la clase abstracta cada quien reescribe los metodos segun su compartamiento
+
+Luego se crearon las clases para cada tipo de Skin (RedSkinBehavior, BlueSkinBehavior y GreenSkinBehavior)  y de paso estamos dejando el codigo listo para extenderlo con otra nueva skin solo creariamos nueva SkinBehavior
+
+
+
 
 
 
